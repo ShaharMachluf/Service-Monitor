@@ -4,7 +4,6 @@ import os
 import subprocess
 import time
 from datetime import datetime
-import tkinter
 from tkinter import messagebox
 
 
@@ -15,7 +14,7 @@ class Monitor:
         self.serviceList = "serviceList.txt"
         self.status_log = "Status_Log.txt"
         self.flag = 1
-        self.current_change = ""
+        self.current_change = []
 
     # this function monitor the active processes and write them to file
     def monitoring(self):
@@ -92,13 +91,13 @@ class Monitor:
             prev_list = prev_id_list
         with open(self.status_log, "a") as file:  # write the differences between the files
             file.write('\n' + curr_time + '\n')
-            self.current_change = '\n' + curr_time + '\n'
+            self.current_change.append('\n' + curr_time + '\n')
             print('\n' + curr_time + '\n')
             for i in range(len(prev_list) - 3):
                 if prev_list[i] not in curr_list:
                     try:
                         file.write("stopped:" + '\t' + prev_list[i] + '\n')
-                        self.current_change = "stopped:" + '\t' + prev_list[i] + '\n'
+                        self.current_change.append("stopped:" + '\t' + prev_list[i] + '\n')
                         print("stopped:" + '\t' + prev_list[i] + '\n')
                     except UnicodeEncodeError:
                         continue
@@ -106,7 +105,7 @@ class Monitor:
                 if curr_list[i] not in prev_list:
                     try:
                         file.write("started:" + '\t' + curr_list[i] + '\n')
-                        self.current_change = "started:" + '\t' + curr_list[i] + '\n'
+                        self.current_change.append("started:" + '\t' + curr_list[i] + '\n')
                         print("started:" + '\t' + curr_list[i] + '\n')
                     except UnicodeEncodeError:
                         continue
@@ -120,13 +119,16 @@ class Monitor:
         h = hashlib.sha1()
 
         # open file for reading in binary mode
-        with open(filename, 'rb') as file:
-            # loop till the end of the file
-            chunk = 0
-            while chunk != b'':
-                # read only 1024 bytes at a time
-                chunk = file.read(1024)
-                h.update(chunk)
+        try:
+            with open(filename, 'rb') as file:
+                # loop till the end of the file
+                chunk = 0
+                while chunk != b'':
+                    # read only 1024 bytes at a time
+                    chunk = file.read(1024)
+                    h.update(chunk)
 
-        # return the hex representation of digest
-        return h.hexdigest()
+            # return the hex representation of digest
+            return h.hexdigest()
+        except IOError:
+            return

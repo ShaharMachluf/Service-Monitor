@@ -50,11 +50,16 @@ class Gui:
     # this function write on the screen
     def write_changes(self, monitor):
         prev_line = ""
+        i = 0
         while True:
-            if monitor.current_change != prev_line:
-                prev_line = monitor.current_change
-                self.txt_area.insert('end', monitor.current_change)
-                self.txt_area.yview('end')
+            try:
+                if monitor.current_change[i] != prev_line:
+                    prev_line = monitor.current_change[i]
+                    self.txt_area.insert('end', str(monitor.current_change[i]))
+                    self.txt_area.yview('end')
+                    i = i+1
+            except IndexError:
+                continue
 
     # this function activate the manual mode
     def manual_mode(self, year, year2, month, month2, day, day2, hour, hour2, minute, minute2, sec, sec2):
@@ -83,10 +88,8 @@ class Gui:
         print(self.time1)
         print(self.time2)
         manual = Manual(self.time1, self.time2)
-        # results = []
         Thread(target=manual.monitoring).start()
         while True:
-            # print(self.results)
             if len(manual.results) >= 1:
                 self.txt_area2.insert('end', str(manual.results))
                 self.txt_area2.yview('end')
