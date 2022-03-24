@@ -59,13 +59,15 @@ class Monitor:
     def compare(self, curr, prev, curr_time):
         prev_list = prev.split('\n')  # split the process list by lines
         curr_list = curr.split('\n')
-        prev_id_list = [1, 1, 1, 1]
-        curr_id_list = [1, 1, 1, 1]
+        prev_id_list = [1, 1]
+        curr_id_list = [1, 1]
         if self.system == "Linux":
-            for i in range(4, len(prev_list)):  # get process by ID
-                prev_id_list.append(prev_list[i][8:16])
-            for i in range(4, len(curr_list)):
-                curr_id_list.append(curr_list[i][8:16])  # get process by ID
+            for i in range(2, len(prev_list)):  # get process by ID
+                prev_id_list.append(prev_list[i].split(" ")[0])
+            for i in range(2, len(curr_list)):
+                curr_id_list.append(curr_list[i].split(" ")[0])  # get process by ID
+            curr_list = curr_id_list
+            prev_list = prev_id_list
         with open(self.status_log, "a") as file:  # write the differences between the files
             file.write('\n' + curr_time + '\n')
             self.current_change = '\n' + curr_time + '\n'
