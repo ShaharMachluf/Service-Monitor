@@ -49,7 +49,6 @@ class Monitor:
                 for i in range(len(curr_list) - 3):
                     try:
                         file.write(curr_list[i] + "\n")
-                        print("##\n" + curr_list[i])
                     except UnicodeEncodeError:
                         continue
                 file.write("\n~\n")
@@ -63,9 +62,19 @@ class Monitor:
         curr_id_list = [1, 1]
         if self.system == "Linux":
             for i in range(2, len(prev_list)):  # get process by ID
-                prev_id_list.append(prev_list[i].split(" ")[0])
+                try:
+                    prev_id_list.append(prev_list[i].split(" ")[2])
+                except IndexError:
+                    continue
+                if prev_list[i][0] != " ":
+                    break
             for i in range(2, len(curr_list)):
-                curr_id_list.append(curr_list[i].split(" ")[0])  # get process by ID
+                try:
+                    curr_id_list.append(curr_list[i].split(" ")[2])  # get process by ID
+                except IndexError:
+                    continue
+                if curr_list[i][0] != " ":
+                    break
             curr_list = curr_id_list
             prev_list = prev_id_list
         with open(self.status_log, "a") as file:  # write the differences between the files
