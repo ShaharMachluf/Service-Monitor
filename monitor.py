@@ -1,8 +1,11 @@
+import hashlib
 import platform
 import os
 import subprocess
 import time
 from datetime import datetime
+import tkinter
+from tkinter import messagebox
 
 
 class Monitor:
@@ -31,7 +34,15 @@ class Monitor:
             pass
         with open(self.serviceList, "a") as file:
             file.write(str(self.my_time) + "\n")
+            prev_hash = ""
+            prev_hash2 = ""
             while True:
+                curr_hash = self.hash_file(self.serviceList)
+                curr_hash2 = self.hash_file(self.status_log)
+                if prev_hash != "" and prev_hash != curr_hash:
+                    messagebox.showerror("error", self.serviceList + " was changed by unknown user")
+                if prev_hash2 != "" and prev_hash2 != curr_hash2:
+                    messagebox.showerror("error", self.status_log + " file was changed by unknown user")
                 if self.flag == 0:
                     return
                 curr_time = "\n$" + str(datetime.now()) + "\n"
@@ -52,6 +63,8 @@ class Monitor:
                     except UnicodeEncodeError:
                         continue
                 file.write("\n~\n")
+                prev_hash = self.hash_file(self.serviceList)
+                prev_hash2 = self.hash_file(self.status_log)
                 time.sleep(float(self.my_time))
 
     # this function check if something changes
@@ -100,3 +113,20 @@ class Monitor:
 
     def exit_monitor(self):
         self.flag = 0
+
+    # this function return the hash of the file
+    def hash_file(self, filename):
+        # make a hash object
+        h = hashlib.sha1()
+
+        # open file for reading in binary mode
+        with open(filename, 'rb') as file:
+            # loop till the end of the file
+            chunk = 0
+            while chunk != b'':
+                # read only 1024 bytes at a time
+                chunk = file.read(1024)
+                h.update(chunk)
+
+        # return the hex representation of digest
+        return h.hexdigest()

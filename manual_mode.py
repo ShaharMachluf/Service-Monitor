@@ -53,42 +53,36 @@ class Manual:
 
     # find the index of the relevant time in the list
     def find_index(self, seconds, lines, date):
-        print("\n" + str(seconds) + "\n")
-        # print(str(self.my_time)+"\n")
         for i in range(len(lines)):
             if lines[i][0] == "$":
                 curr_time = int(lines[i][INDEX_SECONDS:INDEX_SECONDS + 2]) + int(
                     lines[i][INDEX_MIN:INDEX_MIN + 2]) * 60 + int(lines[i][INDEX_HOURS:INDEX_HOURS + 2]) * 3600
-                print(curr_time)
                 if (seconds - self.my_time) <= curr_time <= (seconds + self.my_time) and lines[i][
                                                                                            :INDEX_HOURS] == date[
                                                                                                             :INDEX_HOURS]:
-                    print(i)
                     return i
         return -1
 
     # this function check if something changes
     def compare(self, curr_list, prev_list, curr_time):
-        prev_id_list = [1, 1, 1]
-        curr_id_list = [1, 1, 1]
-        if self.system == "Windows":
-            for i in range(3, len(prev_list)):  # get process by ID
-                prev_id_list.append(prev_list[i][PID_START_W:PID_END_W])
-            for i in range(3, len(curr_list)):
-                curr_id_list.append(curr_list[i][PID_START_W:PID_END_W])  # get process by ID
-        elif self.system == "Linux":
-            for i in range(3, len(prev_list)):  # get process by ID
-                prev_id_list.append(prev_list[i][PID_START_L:PID_END_L])
-            for i in range(3, len(curr_list)):
-                curr_id_list.append(curr_list[i][PID_START_L:PID_END_L])  # get process by ID
-        ans = ['\n' + curr_time + '\n']
+        # prev_id_list = [1, 1, 1]
+        # curr_id_list = [1, 1, 1]
+        # if self.system == "Windows":
+        #     for i in range(3, len(prev_list)):  # get process by ID
+        #         prev_id_list.append(prev_list[i][PID_START_W:PID_END_W])
+        #     for i in range(3, len(curr_list)):
+        #         curr_id_list.append(curr_list[i][PID_START_W:PID_END_W])  # get process by ID
+        # if self.system == "Linux":
+        #     for i in range(3, len(prev_list)):  # get process by ID
+        #         prev_id_list.append(prev_list[i][PID_START_L:PID_END_L])
+        #     for i in range(3, len(curr_list)):
+        #         curr_id_list.append(curr_list[i][PID_START_L:PID_END_L])  # get process by ID
+        ans = '\n' + curr_time + '\n'
         # print('\n' + curr_time + '\n')
         for i in range(3, len(prev_list)):
-            if prev_id_list[i] not in curr_id_list:
+            if prev_list[i] not in curr_list:
                 ans += "stopped:" + '\t' + prev_list[i] + '\n'
-                # print("stopped:" + '\t' + prev_list[i] + '\n')
         for i in range(3, len(curr_list)):
-            if curr_id_list[i] not in prev_id_list:
+            if curr_list[i] not in prev_list:
                 ans += "started:" + '\t' + curr_list[i] + '\n'
-                # print("started:" + '\t' + curr_list[i] + '\n')
         return ans
