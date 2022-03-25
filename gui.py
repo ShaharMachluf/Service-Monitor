@@ -63,6 +63,7 @@ class Gui:
 
     # this function activate the manual mode
     def manual_mode(self, year, year2, month, month2, day, day2, hour, hour2, minute, minute2, sec, sec2):
+        # erange time as a string
         self.time1 += "$" + year.get() + "-"
         mon_str = "0" + month.get() if (len(month.get()) == 1) else month.get()
         self.time1 += mon_str + "-"
@@ -85,11 +86,9 @@ class Gui:
         self.time2 += min_str2 + ":"
         sec_str2 = "0" + sec2.get() if (len(sec2.get()) == 1) else sec2.get()
         self.time2 += sec_str2
-        print(self.time1)
-        print(self.time2)
         manual = Manual(self.time1, self.time2)
         Thread(target=manual.monitoring).start()
-        while True:
+        while True:  # print the results in the gui
             if len(manual.results) >= 1:
                 self.txt_area2.insert('end', str(manual.results))
                 self.txt_area2.yview('end')

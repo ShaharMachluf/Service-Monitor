@@ -38,25 +38,25 @@ class Monitor:
             while True:
                 curr_hash = self.hash_file(self.serviceList)
                 curr_hash2 = self.hash_file(self.status_log)
-                if prev_hash != "" and prev_hash != curr_hash:
+                if prev_hash != "" and prev_hash != curr_hash:  # check if the file was changed while the monitor was in sleep mode
                     messagebox.showerror("error", self.serviceList + " was changed by unknown user")
                 if prev_hash2 != "" and prev_hash2 != curr_hash2:
                     messagebox.showerror("error", self.status_log + " file was changed by unknown user")
-                if self.flag == 0:
+                if self.flag == 0:  # the program was stopped
                     return
                 curr_time = "\n$" + str(datetime.now()) + "\n"
                 prev_proc = curr_proc
                 if self.system == "Windows":
                     try:
-                        curr_proc = subprocess.check_output("net start", shell=True, encoding="unicode_escape")
+                        curr_proc = subprocess.check_output("net start", shell=True, encoding="unicode_escape")  # get the service list
                     except AttributeError:
                         pass
                 elif self.system == "Linux":
-                    curr_proc = os.popen("systemctl list-units --type=service").read()
-                self.compare(curr_proc, prev_proc, curr_time)
+                    curr_proc = os.popen("systemctl list-units --type=service").read()  # get the service list
+                self.compare(curr_proc, prev_proc, curr_time)  # compare the different times for the log file
                 file.write(curr_time)
                 curr_list = curr_proc.split("\n")
-                for i in range(len(curr_list) - 3):
+                for i in range(len(curr_list) - 3):  # write to service list
                     try:
                         file.write(curr_list[i] + "\n")
                     except UnicodeEncodeError:
@@ -73,7 +73,7 @@ class Monitor:
         prev_id_list = [1, 1]
         curr_id_list = [1, 1]
         if self.system == "Linux":
-            for i in range(2, len(prev_list)):  # get process by ID
+            for i in range(2, len(prev_list)):  # get service by name
                 try:
                     prev_id_list.append(prev_list[i].split(" ")[2])
                 except IndexError:
@@ -82,7 +82,7 @@ class Monitor:
                     break
             for i in range(2, len(curr_list)):
                 try:
-                    curr_id_list.append(curr_list[i].split(" ")[2])  # get process by ID
+                    curr_id_list.append(curr_list[i].split(" ")[2])  # get service by name
                 except IndexError:
                     continue
                 if curr_list[i][0] != " ":
@@ -94,7 +94,7 @@ class Monitor:
             self.current_change.append('\n' + curr_time + '\n')
             print('\n' + curr_time + '\n')
             for i in range(len(prev_list) - 3):
-                if prev_list[i] not in curr_list:
+                if prev_list[i] not in curr_list:  # services that stopped
                     try:
                         file.write("stopped:" + '\t' + prev_list[i] + '\n')
                         self.current_change.append("stopped:" + '\t' + prev_list[i] + '\n')
@@ -102,7 +102,7 @@ class Monitor:
                     except UnicodeEncodeError:
                         continue
             for i in range(len(curr_list) - 3):
-                if curr_list[i] not in prev_list:
+                if curr_list[i] not in prev_list:  # services that started
                     try:
                         file.write("started:" + '\t' + curr_list[i] + '\n')
                         self.current_change.append("started:" + '\t' + curr_list[i] + '\n')
