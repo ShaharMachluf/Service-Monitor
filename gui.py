@@ -1,3 +1,4 @@
+import os
 import tkinter.simpledialog
 from tkinter import *
 from tkinter import ttk
@@ -45,7 +46,7 @@ class Gui:
     # this function exit from the program
     def exit_program(self):
         self.root.destroy()
-        exit(0)
+        os._exit(0)
 
     # this function write on the screen
     def write_changes(self, monitor):
