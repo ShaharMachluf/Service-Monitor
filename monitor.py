@@ -32,6 +32,8 @@ class Monitor:
         except IOError:
             pass
         with open(self.serviceList, "a") as file:
+            if self.system == "Linux":
+                os.system("chmod 700 " + self.serviceList)
             file.write(str(self.my_time) + "\n")
             prev_hash = ""
             prev_hash2 = ""
@@ -90,6 +92,8 @@ class Monitor:
             curr_list = curr_id_list
             prev_list = prev_id_list
         with open(self.status_log, "a") as file:  # write the differences between the files
+            if self.system == "Linux":
+                os.system("chmod 700 " + self.status_log)
             file.write('\n' + curr_time + '\n')
             self.current_change.append('\n' + curr_time + '\n')
             print('\n' + curr_time + '\n')

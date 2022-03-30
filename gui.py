@@ -7,6 +7,7 @@ from monitor import Monitor
 from manual_mode import Manual
 from threading import Thread
 import tkinter.scrolledtext
+from tkinter import messagebox
 
 
 # this is the main class that activate the GUI
@@ -65,26 +66,62 @@ class Gui:
     # this function activate the manual mode
     def manual_mode(self, year, year2, month, month2, day, day2, hour, hour2, minute, minute2, sec, sec2):
         # erange time as a string
+        if year.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         self.time1 += "$" + year.get() + "-"
+        if month.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         mon_str = "0" + month.get() if (len(month.get()) == 1) else month.get()
         self.time1 += mon_str + "-"
+        if day.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         day_str = "0" + day.get() if (len(day.get()) == 1) else day.get()
         self.time1 += day_str + " "
+        if hour.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         hour_str = "0" + hour.get() if (len(hour.get()) == 1) else hour.get()
         self.time1 += hour_str + ":"
+        if minute.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         min_str = "0" + minute.get() if (len(minute.get()) == 1) else minute.get()
         self.time1 += min_str + ":"
+        if sec.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         sec_str = "0" + sec.get() if (len(sec.get()) == 1) else sec.get()
         self.time1 += sec_str
+        if year2.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         self.time2 += "$" + year2.get() + "-"
+        if month2.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         mon_str2 = "0" + month2.get() if (len(month2.get()) == 1) else month2.get()
         self.time2 += mon_str2 + "-"
+        if day2.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         day_str2 = "0" + day2.get() if (len(day2.get()) == 1) else day2.get()
         self.time2 += day_str2 + " "
+        if hour2.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         hour_str2 = "0" + hour2.get() if (len(hour2.get()) == 1) else hour2.get()
         self.time2 += hour_str2 + ":"
+        if minute2.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         min_str2 = "0" + minute2.get() if (len(minute2.get()) == 1) else minute2.get()
         self.time2 += min_str2 + ":"
+        if sec2.get() == "":
+            messagebox.showinfo("enter time", "please fill the all fields")
+            return
         sec_str2 = "0" + sec2.get() if (len(sec2.get()) == 1) else sec2.get()
         self.time2 += sec_str2
         manual = Manual(self.time1, self.time2)
