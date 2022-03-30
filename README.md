@@ -23,6 +23,10 @@ Check the diffrences between the two time stamps the user entered and show them 
 
 ## Defence from hackers
 After writing to the file we check the files current hash code using the method hash_file. Before we change the file again we check the hash code of the file again to see if any changes was made in the meantime. If so it means that someone else 
-modified the file so we show an error message that ket the user know it happend.
+modified the file so we show an error message that ket the user know it happend.  
+In addition we changed the files authorization that only the owner of the file can write to it.
+
+## How to Run
+Run the file gui.py.
 
 *the program runs in python 3.8
